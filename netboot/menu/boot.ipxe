@@ -1,0 +1,18 @@
+#!ipxe
+
+:start
+menu PXE Boot Options
+item core-iso Core 
+item exit Exit 
+
+choose --default core-iso --timeout 10000 option && goto ${option}
+
+:core-iso 
+set http_server http://${next-server}
+set directory core
+initrd ${http_server}/${directory}/Core.iso
+chain ${http_server}/memdisk iso raw 
+boot
+
+:exit 
+exit

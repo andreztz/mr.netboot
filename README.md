@@ -1,2 +1,12 @@
 # mr.netboot
-pXe server
+
+
+pxe server
+
+
+
+# Run 
+
+```
+$ docker-compose run -d
+```
