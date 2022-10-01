@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  pxe:
+    build: .
+    command: /usr/bin/supervisord
+    ports:
+      - 80:80
+      - 69:69/udp
+    volumes:
+      - ./data:/data
+      - ./netboot:/netboot
