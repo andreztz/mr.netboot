@@ -4,7 +4,6 @@
 
 [Preboot eXecution Environment (PXE)](https://en.wikipedia.org/wiki/Preboot_Execution_Environment) is a standardized client-server environment for booting computers using the network interface.
 
-
 ![](../header.png)
 
 ## Instalation
