@@ -2,10 +2,16 @@
 
 :start
 menu PXE Boot Options
+item alpine-net Alpine Internet Mirror
 item core-iso Core 
 item exit Exit 
 
 choose --default core-iso --timeout 10000 option && goto ${option}
+
+:alpine-net
+set http_server http://${next-server}
+set directory alpine-net
+chain -ar ${http_server}/${directory}/boot.ipxe || goto failed
 
 :core-iso 
 set http_server http://${next-server}
