@@ -20,8 +20,11 @@ TODO
 ```
 $ git clone https://github.com/andreztz/mr.netboot.git 
 $ cd mr.netboot
+$ wget https://boot.ipxe.org/ipxe.efi -P netboot
+$ wget https://boot.ipxe.org/undionly.kpxe -P netboot
 $ docker-compose up -d
 ```
+
 ## Contributing
 
 1. Fork it (<https://github.com/andreztz/mr.netboot/fork>)
