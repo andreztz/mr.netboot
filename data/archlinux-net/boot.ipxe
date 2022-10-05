@@ -1,0 +1,13 @@
+#!ipxe
+
+# set mirrorurl http://mirror.rackspace.com/archlinux/
+set mirrorurl http://mirrors.edge.kernel.org/archlinux/
+
+set release latest
+
+kernel ${mirrorurl}iso/${release}/arch/boot/x86_64/vmlinuz-linux
+initrd ${mirrorurl}iso/${release}/arch/boot/amd-ucode.img
+initrd ${mirrorurl}iso/${release}/arch/boot/intel-ucode.img
+initrd ${mirrorurl}iso/${release}/arch/boot/x86_64/initramfs-linux.img
+imgargs vmlinuz-linux initrd=amd-ucode.img initrd=intel-ucode.img initrd=initramfs-linux.img archiso_http_srv=${mirrorurl}iso/${release}/ archisobasedir=arch verify=y ip=dhcp net.ifnames=0 BOOTIF=01-${netX/mac} cgroup_no_v1=all
+boot
