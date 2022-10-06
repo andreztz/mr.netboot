@@ -1,10 +1,15 @@
-FROM archlinux
-RUN pacman -Syu --noconfirm python-pip supervisor python-twisted
-RUN python -m pip install py3tftp
+FROM python:3.11.0rc2-alpine3.16
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED 1
 EXPOSE 80
 EXPOSE 69/udp
 COPY scripts/ /scripts
 COPY etc/ /etc
 COPY netboot/ /netboot
 VOLUME /data
-CMD ["/usr/bin/supervisord"]
+WORKDIR / 
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+# CMD ["/usr/bin/supervisord"]
+CMD ["/usr/local/bin/supervisord"]
+
