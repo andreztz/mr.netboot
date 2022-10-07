@@ -8,6 +8,6 @@ set arch x86_64
 set flavor lts
 set netboot ${alpine-repo}/${version}/releases/${arch}/netboot
 
-kernel ${netboot}/vmlinuz-${flavor} initrd=initramfs-${flavor} console=tty0 modules=loop,squashfs modloop=${netboot}/modloop-${flavor} alpine_repo=${alpine-repo}/${version}/main/  
+kernel ${netboot}/vmlinuz-${flavor} ssh_key=${ssh_keys} initrd=initramfs-${flavor} console=tty0 modules=loop,squashfs modloop=${netboot}/modloop-${flavor} alpine_repo=${alpine-repo}/${version}/main/  
 initrd ${netboot}/initramfs-${flavor}
 boot 
