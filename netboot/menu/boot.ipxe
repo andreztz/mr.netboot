@@ -1,30 +1,53 @@
 #!ipxe
 
-:start
-menu PXE Boot Options
-item alpine-net Alpine Internet Mirror
-item archlinux-net Arch Linux Internet Mirror
-item core-iso Core
-item exit Exit
+set ssh_keys https://github.com/andreztz.keys
 
-choose --default core-iso --timeout 10000 option && goto ${option}
+set menu-timeout 5000
+set submenu-timeout ${menu-timeout}
+isset ${menu-default} || set menu-default exit
+
+
+:start
+menu Mr. NetBoot
+item --gap --                   ------------------------- Operating Systems ------------------------------
+item --key l menu-linux         [l] Linux
+item --key w menu-windows       [w] Windows [w]
+item --gap --                   ------------------------- Tools and utilities ----------------------------
+item --key t menu-tools         [t] Tools
+item --gap --                   ------------------------- Advanced options -------------------------------
+item exit Exit
+choose --default alpine-net --timeout 10000 option && goto ${option}
+goto ${selected}
+
+:menu-linux
+menu Choose a flavor
+item alpine-net             Alpine Linux from internet mirror
+item archlinux-net          Arch Linux from internet mirror
+item
+item --key 0x08 back Back to top menu...
+iseq ${menu-default} menu-linux && isset ${submenu-default} && goto menu-linux-timed ||
+choose selected && goto ${selected} || goto start
+:menu-linux-timed
+choose --timeout ${submenu-timeout} --default ${submenu-default} selected && goto ${selected} || goto start
 
 :alpine-net
 set http_server http://${next-server}
-set directory alpine-net
-chain -ar ${http_server}/${directory}/boot.ipxe
+chain -ar ${http_server}/alpine.ipxe
 
 :archlinux-net
 set http_server http://${next-server}
-set directory archlinux-net
-chain ${http_server}/${directory}/boot.ipxe
+chain ${http_server}/archlinux.ipxe
 
-:core-iso 
-set http_server http://${next-server}
-set directory core
-initrd ${http_server}/${directory}/Core.iso
-chain ${http_server}/memdisk iso raw 
-boot
+:menu-tools
+menu Recovery tools
+item sysrcd                 SystemRescueCD ${sysrcd-version}
+item mt86p                  Memtest86+ V5
+item
+item --key 0x08 back Back to top menu...
+iseq ${menu-default} menu-tools && isset ${submenu-default} && goto menu-tools-timed ||
+choose selected && goto ${selected} || goto start
+:menu-tools-timed
+choose --timeout ${submenu-timeout} --default ${submenu-default} selected && goto ${selected} || goto start
 
 :exit 
 exit
