@@ -1,0 +1,29 @@
+---
+- name: Bootstrap
+  hosts: all
+  gather_facts: true
+  become: true
+  tasks:
+
+    - name: Create ztz user
+      user:
+        name: ztz
+        state: present
+        password: "{{ 'password' | password_hash('sha512') }}"
+        update_password: on_create
+        shell: /bin/bash
+        # groups: sudo
+        groups: wheel
+        append: yes
+
+    - name: Add sudo rights for ztz 
+      copy:
+        dest: "/etc/sudoers.d/ztz"
+        content: "ztz ALL=(root) NOPASSWD: ALL"
+        backup: true
+
+    - name: Set authorized key from github
+      authorized_key:
+        user: ztz
+        state: present
+        key: https://github.com/andreztz.keys

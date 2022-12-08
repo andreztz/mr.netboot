@@ -1,0 +1,12 @@
+[server]
+192.168.1.100
+
+[server:vars]
+ansible_ssh_user=ztz
+ansbile_ssh_private_key_file=~/.ssh/id_rsa
+
+# ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+# ansible_ssh_common_args='-o PasswordAuthentication=no'
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3

@@ -1,0 +1,128 @@
+---
+- hosts: all
+  tasks:
+
+    # - name: Add repositorio Python 3.10
+    #   become: yes
+    #   apt_repository: 
+    #     repo: ppa:deadsnakes/ppa
+
+    # - name: Updating repository 
+    #   become: yes
+    #   apt:
+    #     update_cache: yes
+    - name: update_cache repository
+      become: yes
+      pacman:
+        update_cache: yes
+
+    - name: Install required system packages
+      become: yes
+      pacman:
+        name:
+          # - make
+          # - build-essential
+          # - libssl-dev
+          # - zlib1g-dev
+          # - libbz2-dev
+          # - libreadline-dev
+          # - libsqlite3-dev
+          # - wget
+          # - curl
+          # - llvm
+          # - libncursesw5-dev
+          # - xz-utils
+          # - tk-dev
+          # - libxml2-dev
+          # - libxmlsec1-dev
+          # - libffi-dev
+          # - liblzma-dev
+          - python-pip
+          - python-setuptools
+          - supervisor
+          - git
+        state: present
+
+    - name: Install Python dependencies 
+      become: yes
+      pip:
+        name:
+          - py3tftp 
+          - Twisted
+          - bs4 
+          - click 
+          - requests
+
+    - name: Create supervisor group
+      become: yes
+      group:
+        name: supervisor
+        state: present
+
+    - name: Adiciona ztz to group supervisor 
+      become: yes
+      user:
+        name: "{{ ansible_user }}"
+        groups: supervisor
+        append: yes
+
+    - name: Deploy supervisor config file
+      become: yes
+      copy:
+        src: ./data/etc/supervisor/ 
+        dest: /etc/ 
+        mode: 0755
+
+    - name: Create scripts directory
+      become: yes
+      file:
+        path: /scripts/
+        state: directory
+        mode: 0755 
+
+    - name: deploy mirrors-dl script
+      become: yes
+      copy:
+        src: data/scripts/mirrors-dl.py 
+        dest: /scripts/
+        mode: 0755
+
+    - name: deploy webserver script
+      become: yes
+      copy:
+        src: data/scripts/webserver.py 
+        dest: /scripts/
+        mode: 0755
+    
+    - name: Deploy www
+      become: yes
+      copy:
+        src: ./data/www/ 
+        dest: /www/
+        directory_mode: 0755
+        mode: 0644
+        owner: ztz
+
+    - name: Deploy tftp 
+      become: yes
+      copy:
+        src: ./data/tftp/
+        dest: /tftp/
+
+    - name: Supervisor service
+      become: yes
+      systemd:
+        name: supervisord
+        state: started
+        enabled: yes
+
+    - name: DEBUG
+      debug:
+        msg: Usuário "{{ ansible_user }}" - home "{{ ansible_env.HOME }}" 
+
+    - name: Download Alpine
+      script: /usr/bin/python3 /scripts/mirrors-dl.py https://mirrors.edge.kernel.org/alpine/latest-stable/releases/x86_64/netboot/ -d /www/ --recursive
+
+    - name: Download Archlinux 
+      script: /usr/bin/python3 /scripts/mirrors-dl.py https://mirrors.edge.kernel.org/archlinux/iso/latest/arch/ -d /www/ --recursive
+
