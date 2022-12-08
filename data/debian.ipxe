@@ -1,0 +1,6 @@
+#!ipxe
+# priority=low -> change to expert mode
+set version bullseye
+kernel http://deb.debian.org/debian/dists/${version}/main/installer-amd64/current/images/netboot/debian-installer/amd64/linux initrd=initrd.gz priority=low
+initrd http://deb.debian.org/debian/dists/${version}/main/installer-amd64/current/images/netboot/debian-installer/amd64/initrd.gz
+boot || imgfree

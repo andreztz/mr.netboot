@@ -21,14 +21,15 @@ goto ${selected}
 
 :menu-linux
 menu Choose a flavor
-item alpine-net             Alpine Linux from internet mirror
-item archlinux-net          Arch Linux from internet mirror
+item alpine-net             Install alpine linux from internet mirror
+item archlinux-net          Install arch linux from internet mirror
+item debian                 Install debian linux from internet mirror
+item proxmox-menu           Install Proxmox
 item
 item --key 0x08 back Back to top menu...
-iseq ${menu-default} menu-linux && isset ${submenu-default} && goto menu-linux-timed ||
-choose selected && goto ${selected} || goto start
-:menu-linux-timed
-choose --timeout ${submenu-timeout} --default ${submenu-default} selected && goto ${selected} || goto start
+choose --default alpine-net --timeout 10000 option && goto ${option} 
+goto ${selected}
+
 
 :alpine-net
 set http_server http://${next-server}
@@ -37,6 +38,30 @@ chain -ar ${http_server}/alpine.ipxe
 :archlinux-net
 set http_server http://${next-server}
 chain ${http_server}/archlinux.ipxe
+
+:debian 
+set http_server http://${next-server}
+chain ${http_server}/debian.ipxe
+
+
+:proxmox-menu
+set http_server http://${next-server}
+chain ${http_server}/proxmox.ipxe
+
+:menu-windows
+menu Choose a flavor
+item winpe10                Windows 10 Preinstallation Environment
+item
+item --key 0x08 back Back to top menu...
+iseq ${menu-default} menu-windows && isset ${submenu-default} && goto menu-windows-timed ||
+choose selected && goto ${selected} || goto start
+:menu-windows-timed
+choose --timeout ${submenu-timeout} --default ${submenu-default} selected && goto ${selected} || goto start
+
+
+:winpe10
+sanboot http://${next-server}/winpe10/winpe.iso
+
 
 :menu-tools
 menu Recovery tools
