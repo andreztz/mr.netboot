@@ -192,4 +192,5 @@ poetry.toml
 *.retry
 
 # End of https://www.toptal.com/developers/gitignore/api/ansible
-
+data/www/*
+!data/www/*.ipxe
