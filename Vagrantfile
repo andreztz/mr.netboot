@@ -20,6 +20,8 @@ Vagrant.configure("2") do |config|
   #   :type => "bridge" , 
   #   :dev => "bridge0", 
   #   :mode => "bridge"
+  config.vm.synced_folder "data/www", "/www", 
+     owner: "ztz", group: "wheel"
   config.vm.network :public_network, :bridge => "bridge0", :ip => "192.168.1.100"
   config.vm.provision "ansible", playbook: "bootstrap.yaml"
 end
