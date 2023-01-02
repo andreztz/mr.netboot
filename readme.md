@@ -2,5 +2,5 @@
 
 ```
 $ vagrant up 
-$ ansible playbook.yaml
+$ ansible-playbook playbook.yaml
 ```
